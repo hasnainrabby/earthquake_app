@@ -1,4 +1,6 @@
 
+import 'package:earthquake_app/earthquake_app/util/types_helper.dart';
+
 class QuakeModel {
   String? type;
   Metadata? metadata;
@@ -15,7 +17,7 @@ class QuakeModel {
     if (json['features'] != null) {
       features = <Features>[];
       json['features'].forEach((v) {
-        features!.add(new Features.fromJson(v));
+        features!.add(Features.fromJson(v));
       });
     }
     bbox = json['bbox'].cast<double>();
@@ -83,10 +85,10 @@ class Features {
   Features.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     properties = json['properties'] != null
-        ? new Properties.fromJson(json['properties'])
+        ? Properties.fromJson(json['properties'])
         : null;
     geometry = json['geometry'] != null
-        ? new Geometry.fromJson(json['geometry'])
+        ?  Geometry.fromJson(json['geometry'])
         : null;
     id = json['id'];
   }
@@ -162,10 +164,10 @@ class Properties {
         this.title});
 
   Properties.fromJson(Map<String, dynamic> json) {
-    mag = json['mag'];
+    mag = TypesHelper.toDouble(json['mag']); //forcing conversion to double
     place = json['place'];
-    time = json['time'];
-    updated = json['updated'];
+    time = TypesHelper.toInt(json['time']);
+    updated = TypesHelper.toInt(json['updated']);
     tz = json['tz'];
     url = json['url'];
     detail = json['detail'];
@@ -174,8 +176,8 @@ class Properties {
     mmi = json['mmi'];
     alert = json['alert'];
     status = json['status'];
-    tsunami = json['tsunami'];
-    sig = json['sig'];
+    tsunami = TypesHelper.toInt(json['tsunami']);
+    sig = TypesHelper.toInt(json['sig']);
     net = json['net'];
     code = json['code'];
     ids = json['ids'];
@@ -183,8 +185,8 @@ class Properties {
     types = json['types'];
     nst = json['nst'];
     dmin = json['dmin'];
-    rms = json['rms'];
-    gap = json['gap'];
+    rms = TypesHelper.toDouble(json['rms']);
+    gap = TypesHelper.toDouble(json['gap']);
     magType = json['magType'];
     type = json['type'];
     title = json['title'];
