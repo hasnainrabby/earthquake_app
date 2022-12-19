@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:earthquake_app/earthquake_app/network/network.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +16,7 @@ class EarthquakeApp extends StatefulWidget {
 
 class _EarthquakeAppState extends State<EarthquakeApp> {
   late Future<QuakeModel> _quakeData;
+  Completer<GoogleMapController> _controller = Completer();
   @override
   void initState() {
 
@@ -29,6 +32,23 @@ class _EarthquakeAppState extends State<EarthquakeApp> {
       appBar: AppBar(
         title: const Text("Earthquake"),
       ),
+      body: Stack(
+        children: [
+          _buildGoogleMap(context)
+        ],
+      ),
     );
   }
+
+ Widget _buildGoogleMap(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: GoogleMap(
+             onMapCreated: (GoogleMapController controller){
+               _controller.complete(controller);
+             }, initialCameraPosition: CameraPosition(target: LatLng(23.816591317488747, 90.41560944927275),zoom: 3),
+      ),
+    );
+ }
 }
