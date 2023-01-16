@@ -1,4 +1,4 @@
-//for fixing null value issue form jason.
+//for fixing null value issue form json.
 class TypesHelper{
   static int toInt(num val){
     try{

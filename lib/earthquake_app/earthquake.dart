@@ -17,6 +17,7 @@ class EarthquakeApp extends StatefulWidget {
 class _EarthquakeAppState extends State<EarthquakeApp> {
   late Future<QuakeModel> _quakeData;
   Completer<GoogleMapController> _controller = Completer();
+  final List<Marker>_markerList = <Marker>[];
   @override
   void initState() {
 
@@ -37,6 +38,11 @@ class _EarthquakeAppState extends State<EarthquakeApp> {
           _buildGoogleMap(context)
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: (){
+            findQuakes();
+          },
+          label: Text("Find Quakes")),
     );
   }
 
@@ -47,8 +53,34 @@ class _EarthquakeAppState extends State<EarthquakeApp> {
       child: GoogleMap(
              onMapCreated: (GoogleMapController controller){
                _controller.complete(controller);
-             }, initialCameraPosition: CameraPosition(target: LatLng(23.816591317488747, 90.41560944927275),zoom: 3),
+             },
+        initialCameraPosition: CameraPosition(target: LatLng(23.816591317488747, 90.41560944927275),zoom: 3),
+        markers: Set<Marker>.of(_markerList),
+
       ),
     );
  }
-}
+
+  void findQuakes() {
+     setState(() {
+       _markerList.clear(); //clear the map in the beginning
+       _hendelResponse();
+     });
+  }
+
+  void _hendelResponse() {
+   _quakeData.then((quakes) => {
+     quakes.features?.forEach((quake) {
+       _markerList.add(Marker(markerId: MarkerId(quake.id.toString()),
+       infoWindow: InfoWindow(title: quake.properties?.mag.toString(),snippet: quake.properties!.title),
+       position: LatLng(quake.geometry!.coordinates![1], quake.geometry!.coordinates![0]),
+         icon: BitmapDescriptor.defaultMarker,
+         onTap: (){
+
+         }
+       ));
+     })
+   });
+  }
+  }
+
